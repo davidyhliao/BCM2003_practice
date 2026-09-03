@@ -1,0 +1,9 @@
+# results and work # 
+results/
+.nextflow/
+
+# logs #
+*.nextflow.log*
+
+# nextflow core #
+.nextflow/
