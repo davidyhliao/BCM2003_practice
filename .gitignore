@@ -1,7 +1,8 @@
 # results and work # 
 results/
 .nextflow/
-scratch/
+scratch*
+work/
 
 # logs #
 *.nextflow.log*
