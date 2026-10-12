@@ -3,7 +3,7 @@
 
 
 // downloads the genome from ncbi and processes it into .fasta.gz format
-process DownloadGenome {
+process DOWNLOAD_GENOME {
     conda 'conda-forge::ncbi-datasets-cli'
 
     // the accession can be the NCBI assembly acc. (GCF_000001405.40)
@@ -13,18 +13,15 @@ process DownloadGenome {
     // takes the absolute path
     input:
     val accession
-    val outputDir
 
     output:
-    path "${outputDir}/${accession}.fasta.gz", emit: genome_fasta
+    path "ncbi_dataset/data/${accession}/*", emit: ref_genome_path
 
     script:
     """
-    cd '${outputDir}'
-    datasets download genome accession \
-    '${accession}' \
+    datasets download genome accession \\
+    $accession \\
     --include genome
-    
     unzip "ncbi_dataset.zip"
     """
 

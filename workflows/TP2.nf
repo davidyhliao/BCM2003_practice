@@ -30,10 +30,33 @@ process fastp {
     """
 }
 
+process bwa {
+    conda 'bioconda::bwa'
+
+    input:
+    val inputName
+
+    output:
+    path "*.sam", emit: sam
+
+    // indexing step skipped due to laptop hardware
+    // bwa index "${projectDir}/data/reference_genomes/${refGenomeName}"
+    script:
+    def scratchDir = "/mnt/c/scratch"
+    def projectDir = "/mnt/d/Projects/BCM2003_practice"
+    def refGenomeName = "Homo_sapiens/NCBI/GRCh38/Sequence/BWAIndex/version0.6.0/genome.fa"
+    """
+    bwa mem -t 1 \
+        "${projectDir}/data/reference_genomes/${refGenomeName}" \
+        zcat "${projectDir}/fastp_outputs/${inputName}_trimmed.fastq.gz" \
+        > "${projectDir}/bwa_outputs/${inputName}_aligned.sam"
+    """
+}
 
 workflow {
     main:   
-    fastp("SRR5129058", "output", "fastp_adapters.fa") 
+    fastp("SRR5129058", "output", "fastp_adapters.fa")
+    bwa("SRR5129058")
 
     publish:
     fastp_output_reads = fastp.out.reads
