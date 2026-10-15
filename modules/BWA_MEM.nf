@@ -4,38 +4,33 @@
 // takes >8-10GB of free RAM
 
 process BWA_MEM {
-    conda 'bioconda::bwa'
+    conda 'bioconda::bwa bioconda::samtools'
 
     // IMPORTANT: the refGenomePath should be the path to a bwa-indexed reference genome
     input:
-    tuple val(meta), path(trimmedReads), path(indexedGenome)
+    tuple val(meta), path(trimmedReads), path(indexedGenome), path(indexFiles)
 
     output:
-    path "*_aligned.sam", emit: sam
+    path "*_aligned.bam", emit: bam
 
     
     script:
-    // the scratchDir should have sufficient disk space (>50gb) to store the output file
-    def scratchDir = "/mnt/c/scratch"
-
     def is_single = meta.containsKey('library_layout') ? meta.library_layout=="SINGLE" : false
 
     if (is_single){
         def input_file = trimmedReads instanceof List ? trimmedReads[0] : trimmedReads
         """
-        mkdir -p $scratchDir/bwa_outputs
-        bwa mem -t 4 \
-        $indexedGenome \
-        zcat $trimmedReads \
-        > "${scratchDir}/bwa_outputs/${meta.id}_aligned.sam"
+        bwa mem -t 4 \\
+        $indexedGenome \\
+        zcat $input_file \\
+        | samtools view -b -o ${meta.id}_aligned.bam
         """
     } else {
         """
-        mkdir -p $scratchDir/bwa_outputs
-        bwa mem -t 4 \
-            $indexedGenome \
-            zcat "${trimmedReads[0]}" "${trimmedReads[1]}" \
-            > "${scratchDir}/bwa_outputs/${meta.id}_aligned.sam"
+        bwa mem -t 4 \\
+        $indexedGenome \\
+        "${trimmedReads[0]}" "${trimmedReads[1]}" \\
+        | samtools view -b -o "${meta.id}_aligned.bam"
         """
     }
     

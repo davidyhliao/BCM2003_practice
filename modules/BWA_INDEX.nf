@@ -15,7 +15,7 @@ process BWA_INDEX {
     path rawGenomePath
 
     output:
-    path rawGenomePath, emit:indexed_genome_path
+    tuple path(rawGenomePath), path("${rawGenomePath}.*"), emit:indexed_genome_path
 
     script:
     """
