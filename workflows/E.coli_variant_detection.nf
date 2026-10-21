@@ -1,34 +1,44 @@
 #!/bin/nextflow
 
-
+// include modules
+include {GET_METADATA} from '/mnt/d/Projects/BCM2003_practice/modules/GET_METADATA.nf'
 include {DOWNLOAD_GENOME as DOWNLOAD_GENOME_REF} from '/mnt/d/Projects/BCM2003_practice/modules/DOWNLOAD_GENOME.nf'
 include {DOWNLOAD_READS} from '/mnt/d/Projects/BCM2003_practice/modules/DOWNLOAD_READS.nf'
-include {FASTP} from '/mnt/d/Projects/BCM2003_practice/modules/FASTP.nf'
-include {BWA_INDEX} from '/mnt/d/Projects/BCM2003_practice/modules/BWA_INDEX.nf'
-include {BWA_MEM} from '/mnt/d/Projects/BCM2003_practice/modules/BWA_MEM.nf'
+include {GATK_GENERATE_REFERENCE_FILES} from '/mnt/d/Projects/BCM2003_practice/modules/GATK_GENERATE_REFERENCE_FILES.nf'
+include {HAPLOTYPE_CALLER} from '/mnt/d/Projects/BCM2003_practice/modules/HAPLOTYPE_CALLER.nf'
 
 
+// include sub-workflows
+include {ALIGN_TO_REFERENCE_GENOME} from '/mnt/d/Projects/BCM2003_practice/subworkflows/ALIGN_TO_REFERENCE_GENOME.nf'
+
+
+// WORKFLOW
 workflow {
     main:
-    ch_meta = channel.fromPath('/mnt/d/Projects/BCM2003_practice/metadata.csv')
+    // testing automatic ways of acquiring metadata
+    //meta_test_ch = GET_METADATA("SRR25083116")
+
+    meta_ch = channel.fromPath('/mnt/d/Projects/BCM2003_practice/metadata.csv')
         .splitCsv(header: true, strip: true)
-        .view{csv -> "\nMetadata: $csv"}
+        .view{csv -> "\nMetadata: $csv \n"}
     
     // downloading reference + variant genome for E.coli
-    DOWNLOAD_GENOME_REF("GCA_000005845.2")
-    DOWNLOAD_READS(ch_meta)
-    FASTP(DOWNLOAD_READS.out.reads)
-    //DOWNLOAD_GENOME_REF.out.view{rawGenomePath -> "\nUnindexed reference genome pth: ${rawGenomePath}"}
-    BWA_INDEX(DOWNLOAD_GENOME_REF.out.ref_genome_path)
-    BWA_INDEX.out.view{indexedGenomePath -> "\n Indexed ref genome path: ${indexedGenomePath}"}
-    //FASTP.out.trimmed_reads.view{trimmedReads -> "\nTrimmed reads: ${trimmedReads[1]}"}
-    //FASTP.out.trimmed_reads.combine(BWA_INDEX.out.indexed_genome_path).view{test -> "\nbwainputs: ${test}"}
-    BWA_MEM(FASTP.out.trimmed_reads.combine(BWA_INDEX.out.indexed_genome_path))
-    BWA_MEM.out.view{aligned -> "\nAligned outputs: ${aligned}"}
+    ref_genome_ch = DOWNLOAD_GENOME_REF("GCA_000005845.2")
+    raw_reads_ch = DOWNLOAD_READS(meta_ch)
+    sorted_indexed_bam_ch = ALIGN_TO_REFERENCE_GENOME(ref_genome_ch, raw_reads_ch)
+    
+    gatk_ch = GATK_GENERATE_REFERENCE_FILES(ref_genome_ch)
+    haplotype_caller_input_ch = sorted_indexed_bam_ch.map{meta, bam, bai, fna, bwa_indices -> 
+        tuple(meta, bam, bai)}
+        .combine(gatk_ch)
+    
+    HAPLOTYPE_CALLER(haplotype_caller_input_ch).view()
+
 
     publish:
-    reference_genome = DOWNLOAD_GENOME_REF.out
-    aligned_reads = BWA_MEM.out
+    //metadata = meta_test_ch
+    reference_genome = ref_genome_ch
+    aligned_reads = sorted_indexed_bam_ch
 }
 
 output{
@@ -40,4 +50,10 @@ output{
         path "aligned_reads/"
         mode "copy"
     }
+    /*
+    metadata {
+        path "metadata/"
+        mode "copy"
+    }
+    */
 }
