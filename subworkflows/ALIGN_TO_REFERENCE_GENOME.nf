@@ -17,10 +17,10 @@ Outputs sorted & indexed .bam (binary alignment file)
 
 
 // MODULES
-include {FASTP} from '/mnt/d/Projects/BCM2003_practice/modules/FASTP.nf'
-include {BWA_INDEX} from '/mnt/d/Projects/BCM2003_practice/modules/BWA_INDEX.nf'
-include {BWA_MEM} from '/mnt/d/Projects/BCM2003_practice/modules/BWA_MEM.nf'
-include {SAMTOOLS} from '/mnt/d/Projects/BCM2003_practice/modules/SAMTOOLS.nf'
+include {FASTP} from '../modules/FASTP.nf'
+include {BWA_INDEX} from '../modules/BWA_INDEX.nf'
+include {BWA_MEM} from '../modules/BWA_MEM.nf'
+include {SAMTOOLS} from '../modules/SAMTOOLS.nf'
 
 
 workflow ALIGN_TO_REFERENCE_GENOME {

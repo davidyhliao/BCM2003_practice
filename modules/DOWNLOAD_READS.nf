@@ -16,7 +16,7 @@ process DOWNLOAD_READS {
     // this directory will hold the temporary files from fasterq-dump
     // modify the variable ncbi_cache as needed before running this module
     script:
-    def ncbi_cache = "/home/david/ncbi_cache"
+    def ncbi_cache = "$HOME/ncbi_cache"
     def SRRID = meta.id
 
     // logic to determine library layout (single/paired end reads)
@@ -31,6 +31,7 @@ process DOWNLOAD_READS {
     fasterq-dump ${ncbi_cache}/${SRRID}/${SRRID}.sralite ${split}
     gzip *.fastq
     rm -r ${ncbi_cache}/${SRRID}
-    cp *.fastq.gz $meta.readDirectory
     """
+    //cp *.fastq.gz $meta.readDirectory
+    //"""
 }

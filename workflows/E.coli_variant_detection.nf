@@ -1,15 +1,15 @@
 #!/bin/nextflow
 
 // include modules
-include {GET_METADATA} from '/mnt/d/Projects/BCM2003_practice/modules/GET_METADATA.nf'
-include {DOWNLOAD_GENOME as DOWNLOAD_GENOME_REF} from '/mnt/d/Projects/BCM2003_practice/modules/DOWNLOAD_GENOME.nf'
-include {DOWNLOAD_READS} from '/mnt/d/Projects/BCM2003_practice/modules/DOWNLOAD_READS.nf'
-include {GATK_GENERATE_REFERENCE_FILES} from '/mnt/d/Projects/BCM2003_practice/modules/GATK_GENERATE_REFERENCE_FILES.nf'
-include {HAPLOTYPE_CALLER} from '/mnt/d/Projects/BCM2003_practice/modules/HAPLOTYPE_CALLER.nf'
+include {GET_METADATA} from '../modules/GET_METADATA.nf'
+include {DOWNLOAD_GENOME as DOWNLOAD_GENOME_REF} from '../modules/DOWNLOAD_GENOME.nf'
+include {DOWNLOAD_READS} from '../modules/DOWNLOAD_READS.nf'
+include {GATK_GENERATE_REFERENCE_FILES} from '../modules/GATK_GENERATE_REFERENCE_FILES.nf'
+include {HAPLOTYPE_CALLER} from '../modules/HAPLOTYPE_CALLER.nf'
 
 
 // include sub-workflows
-include {ALIGN_TO_REFERENCE_GENOME} from '/mnt/d/Projects/BCM2003_practice/subworkflows/ALIGN_TO_REFERENCE_GENOME.nf'
+include {ALIGN_TO_REFERENCE_GENOME} from '../subworkflows/ALIGN_TO_REFERENCE_GENOME.nf'
 
 
 // WORKFLOW
@@ -18,7 +18,7 @@ workflow {
     // testing automatic ways of acquiring metadata
     //meta_test_ch = GET_METADATA("SRR25083116")
 
-    meta_ch = channel.fromPath('/mnt/d/Projects/BCM2003_practice/metadata.csv')
+    meta_ch = channel.fromPath('./metadata/E.coli_metadata.csv')
         .splitCsv(header: true, strip: true)
         .view{csv -> "\nMetadata: $csv \n"}
     

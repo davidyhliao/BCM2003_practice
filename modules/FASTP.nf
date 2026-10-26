@@ -20,7 +20,7 @@ process FASTP {
         def input_file = reads instanceof List ? reads[0] : reads
         """
         fastp \\
-        -i ${meta.readDirectory}/${input_file} \\
+        -i ${input_file} \\
         -o ${meta.id}_trimmed.fastq.gz \\
         -q 3 \\
         -3 -W 4 -M 15 \\
@@ -32,8 +32,8 @@ process FASTP {
     } else {
         """
         fastp \\
-        -i ${meta.readDirectory}/${reads[0]} \\
-        -I ${meta.readDirectory}/${reads[1]} \\
+        -i ${reads[0]} \\
+        -I ${reads[1]} \\
         -o ${meta.id}_R1_trimmed.fastq.gz \\
         -O ${meta.id}_R2_trimmed.fastq.gz \\
         -q 3 \\
