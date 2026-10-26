@@ -51,13 +51,14 @@ flowchart TB
     subgraph " "
     v7[" "]
     v8[" "]
-    v19[" "]
+    v18[" "]
+    v20[" "]
     end
     v14(["GATK_GENERATE_REFERENCE_FILES"])
     v17(["HAPLOTYPE_CALLER"])
     v1(( ))
     v15(( ))
-    v18(( ))
+    v19(( ))
     v0 --> v1
     v3 --> v4
     v4 --> v9
@@ -75,8 +76,9 @@ flowchart TB
     v14 --> v15
     v15 --> v17
     v17 --> v18
-    v18 --> v19
+    v19 --> v20
     v13 --> v15
+    v13 --> v19
 
 </pre>
 <script type="module">

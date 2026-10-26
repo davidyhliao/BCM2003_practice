@@ -32,13 +32,14 @@ workflow {
         tuple(meta, bam, bai)}
         .combine(gatk_ch)
     
-    HAPLOTYPE_CALLER(haplotype_caller_input_ch).view()
+    variants_ch = HAPLOTYPE_CALLER(haplotype_caller_input_ch)
 
 
     publish:
     //metadata = meta_test_ch
     reference_genome = ref_genome_ch
-    aligned_reads = sorted_indexed_bam_ch
+    aligned_reads = sorted_indexed_bam_ch.map{meta, bam, bai, fna, bwa_indices -> tuple(bam, bai)}
+    variants = variants_ch
 }
 
 output{
@@ -48,6 +49,10 @@ output{
     }
     aligned_reads {
         path "aligned_reads/"
+        mode "copy"
+    }
+    variants {
+        path "variants/"
         mode "copy"
     }
     /*
