@@ -12,4 +12,4 @@
 
 ### 4. workflows - otherwise known as **pipelines**, a proper workflow will demand input parameters and/or a metadata file and will serve as an end-to-end process for a bioinformatics task.
 
-## **COMPLETED WORKFLOWS: ** E.coli Variant detection using FASTP, BWA-MEM, SAMTOOLS, and GATK's HAPLOTYPECALLER to prepare .vcf files
+## **COMPLETED WORKFLOWS:** E.coli Variant detection using FASTP, BWA-MEM, SAMTOOLS, and GATK's HAPLOTYPECALLER to prepare .vcf files
