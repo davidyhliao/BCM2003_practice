@@ -9,3 +9,6 @@ work/
 
 # nextflow core #
 .nextflow/
+
+# local file dirs in config
+nextflow.config
