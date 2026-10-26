@@ -14,9 +14,18 @@ This helps improve code reusability and applies the **Separation of concerns** (
 
 ## **COMPLETED WORKFLOWS:** 
 **E.coli Variant detection** using FASTP, BWA-MEM, SAMTOOLS, and GATK's HAPLOTYPECALLER to prepare .vcf files
+  - Comparison of GCA_000005845.2 reference genome with paired-end reads from SRR25083116
+  - Non-pathogenic strain (ref) with outbreak strain (variant) to give insights on genomic variances important for pathogenicity
+<details><summary>Expand to see igv visualisation of some detected variants!</summary>
+  
+  <text><br>Full igv viewer with ref. genome GCA_000005845.2 and SRR25083116 VCF. An SNP is shown</text>
+  <img width="1920" height="894" alt="igv_e coli_var" src="https://github.com/user-attachments/assets/f1803097-aeb6-4d53-bbf1-725e093a9cbc" />
+  <text>Another type of variant (indel) from the same files as above.</text><br>
+  <img width="368" height="550" alt="igv2" src="https://github.com/user-attachments/assets/5e93ea43-07d0-4bbf-83c1-525e129723ff" />
 
-Link to DAG: [E.coli_variant_detection_pipeline.html](https://github.com/user-attachments/files/33945623/E.coli_variant_detection_pipeline.html)
-<details><summary>Click to see html code</summary>
+</details>
+Link to DAG: (https://github.com/user-attachments/files/33945623/E.coli_variant_detection_pipeline.html)
+<details><summary>Expand to see html code</summary>
 <!--
   ~ Copyright 2013-2026, Seqera Labs
   ~
